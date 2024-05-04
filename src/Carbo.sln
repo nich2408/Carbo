@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carbo.Desktop", "Carbo.Desk
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carbo.Core", "Carbo.Core\Carbo.Core.csproj", "{D936EB7D-814D-496E-9AF8-03ADAFC9743B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carbo.Core.Test", "Carbo.Core.Test\Carbo.Core.Test.csproj", "{2C0C2820-7D8C-4557-A401-27C23139D989}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D936EB7D-814D-496E-9AF8-03ADAFC9743B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D936EB7D-814D-496E-9AF8-03ADAFC9743B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D936EB7D-814D-496E-9AF8-03ADAFC9743B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C0C2820-7D8C-4557-A401-27C23139D989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C0C2820-7D8C-4557-A401-27C23139D989}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C0C2820-7D8C-4557-A401-27C23139D989}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C0C2820-7D8C-4557-A401-27C23139D989}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

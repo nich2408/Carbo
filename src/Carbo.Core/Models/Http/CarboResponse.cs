@@ -11,7 +11,7 @@ namespace Carbo.Core.Models.Http
         public HttpStatusCode StatusCode { get; set; }
         public string ReasonPhrase { get; set; }
         public HttpContent Content { get; set; }
-        public HttpHeaders Headers { get; set; }
+        public List<CarboKeyValuePair> Headers { get; set; }
         public HttpHeaders TrailingHeaders { get; set; }
         public Version Version { get; set; }
         public TimeSpan ElapsedTime { get; set; }

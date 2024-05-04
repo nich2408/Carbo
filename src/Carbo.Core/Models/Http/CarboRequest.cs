@@ -9,8 +9,8 @@ namespace Carbo.Core.Models.Http
     {
         public HttpMethod HttpMethod { get; set; }
         public Uri Url { get; set; }
-        public List<RequestKeyValueParameter> QueryParameters { get; set; }
-        public HttpHeaders Headers { get; set; }
+        public List<CarboKeyValuePair> QueryParameters { get; set; }
+        public List<CarboKeyValuePair> Headers { get; set; }
         public HttpContent Content { get; set; }
     }
 }

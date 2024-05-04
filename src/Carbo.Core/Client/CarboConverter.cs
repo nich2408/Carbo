@@ -40,13 +40,21 @@ namespace Carbo.Core.Client
         public static CarboResponse ConvertResponse(HttpResponseMessage response, TimeSpan elapsedTime)
         {
             ArgumentNullException.ThrowIfNull(response);
+            ArgumentOutOfRangeException.ThrowIfNegative(elapsedTime.Ticks);
+
+            List<CarboKeyValuePair> carboPairs = new();
+            foreach (var header in response.Headers)
+            {
+                var pair = new CarboKeyValuePair { Key = header.Key, Value = string.Join(",", header.Value) };
+                carboPairs.Add(pair);
+            }
 
             CarboResponse carboResponse = new()
             {
                 StatusCode = response.StatusCode,
                 ReasonPhrase = response.ReasonPhrase,
                 Content = response.Content,
-                Headers = response.Headers,
+                Headers = carboPairs,
                 TrailingHeaders = response.TrailingHeaders,
                 Version = response.Version,
                 ElapsedTime = elapsedTime,
