@@ -6,7 +6,7 @@ namespace Carbo.Core.Models.Http
     /// <summary>
     /// Class that represents a response from the server.
     /// </summary>
-    public class Response
+    public class CarboResponse
     {
         public HttpStatusCode StatusCode { get; set; }
         public string ReasonPhrase { get; set; }
