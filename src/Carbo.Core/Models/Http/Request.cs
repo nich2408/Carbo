@@ -1,4 +1,6 @@
-﻿namespace Carbo.Core.Models.Http
+﻿using System.Net.Http.Headers;
+
+namespace Carbo.Core.Models.Http
 {
     /// <summary>
     /// Class that represents a request to be made by the client.
@@ -8,7 +10,7 @@
         public HttpMethod HttpMethod { get; set; }
         public Uri Url { get; set; }
         public List<RequestKeyValueParameter> QueryParameters { get; set; }
-        public List<RequestKeyValueParameter> Headers { get; set; }
+        public HttpHeaders Headers { get; set; }
         public HttpContent Content { get; set; }
     }
 }
