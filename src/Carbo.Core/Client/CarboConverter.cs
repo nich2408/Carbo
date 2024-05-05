@@ -49,16 +49,15 @@ namespace Carbo.Core.Client
                 carboPairs.Add(pair);
             }
 
-            CarboResponse carboResponse = new()
-            {
-                StatusCode = response.StatusCode,
-                ReasonPhrase = response.ReasonPhrase,
-                Content = response.Content,
-                Headers = carboPairs,
-                TrailingHeaders = response.TrailingHeaders,
-                Version = response.Version,
-                ElapsedTime = elapsedTime,
-            };
+            CarboResponse carboResponse = CarboResponse.Completed(
+                response.StatusCode,
+                response.ReasonPhrase,
+                response.Content,
+                carboPairs,
+                response.TrailingHeaders,
+                response.Version,
+                elapsedTime);
+
             return carboResponse;
         }
     }

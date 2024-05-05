@@ -1,6 +1,7 @@
 ﻿using Carbo.Core.Models.Http;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Sockets;
 
 namespace Carbo.Core.Client
 {
@@ -15,7 +16,6 @@ namespace Carbo.Core.Client
         /// </summary>
         public static CarboClient Instance { get; } = new()
         {
-            RequestTimeout = TimeSpan.FromMinutes(1),
             MaxResponseContentBufferSize = int.MaxValue,
             PooledConnectionLifetime = TimeSpan.FromMinutes(20)
         };
@@ -24,7 +24,6 @@ namespace Carbo.Core.Client
         {
         }
 
-        public TimeSpan RequestTimeout { get; init; }
         public long MaxResponseContentBufferSize { get; init; }
         public TimeSpan PooledConnectionLifetime { get; init; }
 
@@ -41,7 +40,7 @@ namespace Carbo.Core.Client
             // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-8.0#alternatives-to-ihttpclientfactory
             using HttpClient client = new()
             {
-                Timeout = RequestTimeout,
+                Timeout = carboRequest.ClientTimeout,
                 MaxResponseContentBufferSize = MaxResponseContentBufferSize
             };
             SocketsHttpHandler handler = new()
@@ -50,12 +49,39 @@ namespace Carbo.Core.Client
                 AutomaticDecompression = DecompressionMethods.All,
             };
 
-            var stopwatch = Stopwatch.StartNew();
-            HttpResponseMessage response = await client.SendAsync(httpRequestMessage);
-            stopwatch.Stop();
+            var stopwatch = new Stopwatch();
+            try
+            {
+                stopwatch.Start();
 
-            CarboResponse carboResponse = CarboConverter.ConvertResponse(response, stopwatch.Elapsed);
-            return carboResponse;
+                // See https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient.sendasync?view=net-8.0#system-net-http-httpclient-sendasync(system-net-http-httprequestmessage)
+                HttpResponseMessage response = await client.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseContentRead);
+                stopwatch.Stop();
+
+                CarboResponse carboResponse = CarboConverter.ConvertResponse(response, stopwatch.Elapsed);
+                return carboResponse;
+            }
+            catch (HttpRequestException ex) when (ex.InnerException is SocketException socketException)
+            {
+                stopwatch.Stop();
+                // See https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httprequestexception?view=net-8.0
+                // The socket error is the inner exception of the HttpRequestException.
+                return CarboResponse.SocketErr(stopwatch.Elapsed, socketException.SocketErrorCode, ex.HttpRequestError);
+            }
+            catch (HttpRequestException ex)
+            {
+                // See https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httprequestexception?view=net-8.0
+                stopwatch.Stop();
+                // This should handle all the other exceptions that are not related to the socket.
+                return CarboResponse.HttpErr(stopwatch.Elapsed, ex.HttpRequestError);
+            }
+            catch (TaskCanceledException)
+            {
+                // The TaskCanceledException can be thrown when the Timeout property of the HttpClient is lower than the time it takes to get a socket response.
+                // This is different from the SocketException that can be thrown when a timeout occurs at socket level.
+                stopwatch.Stop();
+                return CarboResponse.ClientTimeout(stopwatch.Elapsed);
+            }
         }
     }
 }
