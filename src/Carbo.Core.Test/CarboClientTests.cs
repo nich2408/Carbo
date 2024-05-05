@@ -82,7 +82,8 @@ namespace Carbo.Core.Test
                 [
                     new CarboKeyValuePair { Key = "Accept", Value = "application/json" }
                 ],
-                // The timeout is set to 1 tick, the minimum value accepted by the inner http client implementation.
+                // The client timeout is set to 1 tick, the minimum value accepted by the inner http client implementation.
+                // This should force the client timeout to occur.
                 ClientTimeout = TimeSpan.FromTicks(1),
             };
 
@@ -113,7 +114,7 @@ namespace Carbo.Core.Test
                 [
                     new CarboKeyValuePair { Key = "Accept", Value = "application/json" }
                 ],
-                // The timeout is set to the maximum value accepted by the inner http client implementation.
+                // The client timeout is set to the maximum value accepted by the inner http client implementation.
                 // Thi should force the socket timeout to occur.
                 ClientTimeout = Timeout.InfiniteTimeSpan,
             };
