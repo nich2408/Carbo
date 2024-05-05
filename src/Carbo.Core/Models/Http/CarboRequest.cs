@@ -12,5 +12,6 @@ namespace Carbo.Core.Models.Http
         public List<CarboKeyValuePair> QueryParameters { get; set; }
         public List<CarboKeyValuePair> Headers { get; set; }
         public HttpContent Content { get; set; }
+        public TimeSpan ClientTimeout { get; set; }
     }
 }
