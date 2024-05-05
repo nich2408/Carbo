@@ -33,7 +33,7 @@ namespace Carbo.Core.Client
         /// </summary>
         /// <param name="carboRequest"></param>
         /// <returns>Response as a CarbonResponse</returns>
-        public CarboResponse SendRequest(CarboRequest carboRequest)
+        public async Task<CarboResponse> SendRequestAsync(CarboRequest carboRequest)
         {
             ArgumentNullException.ThrowIfNull(carboRequest);
             HttpRequestMessage httpRequestMessage = CarboConverter.ConvertRequest(carboRequest);
@@ -51,7 +51,7 @@ namespace Carbo.Core.Client
             };
 
             var stopwatch = Stopwatch.StartNew();
-            HttpResponseMessage response = client.Send(httpRequestMessage);
+            HttpResponseMessage response = await client.SendAsync(httpRequestMessage);
             stopwatch.Stop();
 
             CarboResponse carboResponse = CarboConverter.ConvertResponse(response, stopwatch.Elapsed);

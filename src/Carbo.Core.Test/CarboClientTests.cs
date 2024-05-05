@@ -14,7 +14,7 @@ namespace Carbo.Core.Test
         /// Test to send a valid request.
         /// </summary>
         [Fact]
-        public void SendRequest_WithValidRequest_ReturnsResponse()
+        public async Task SendRequest_WithValidRequest_ReturnsResponse()
         {
             // Arrange
             CarboRequest request = new()
@@ -28,7 +28,7 @@ namespace Carbo.Core.Test
             };
 
             // Act
-            CarboResponse response = CarboClient.Instance.SendRequest(request);
+            CarboResponse response = await CarboClient.Instance.SendRequestAsync(request);
 
             // Assert
             Assert.NotNull(response);
