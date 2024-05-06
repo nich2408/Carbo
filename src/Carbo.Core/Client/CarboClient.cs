@@ -31,8 +31,9 @@ namespace Carbo.Core.Client
         /// Sends a CarboRequest.
         /// </summary>
         /// <param name="carboRequest"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns>Response as a CarbonResponse</returns>
-        public async Task<CarboResponse> SendRequestAsync(CarboRequest carboRequest)
+        public async Task<CarboResponse> SendRequestAsync(CarboRequest carboRequest, CancellationToken? cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(carboRequest);
             HttpRequestMessage httpRequestMessage = CarboConverter.ConvertRequest(carboRequest);
@@ -55,7 +56,15 @@ namespace Carbo.Core.Client
                 stopwatch.Start();
 
                 // See https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient.sendasync?view=net-8.0#system-net-http-httpclient-sendasync(system-net-http-httprequestmessage)
-                HttpResponseMessage response = await client.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseContentRead);
+                HttpResponseMessage response = default;
+                if (cancellationToken is not null)
+                {
+                    response = await client.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseContentRead, cancellationToken.Value);
+                }
+                else
+                {
+                    response = await client.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseContentRead);
+                }
                 stopwatch.Stop();
 
                 CarboResponse carboResponse = CarboConverter.ConvertResponse(response, stopwatch.Elapsed);
@@ -75,9 +84,9 @@ namespace Carbo.Core.Client
                 // This should handle all the other exceptions that are not related to the socket.
                 return CarboResponse.HttpErr(stopwatch.Elapsed, ex.HttpRequestError);
             }
-            catch (TaskCanceledException)
+            catch (TaskCanceledException ex)
             {
-                // The TaskCanceledException can be thrown when the Timeout property of the HttpClient is lower than the time it takes to get a socket response.
+                // The TaskCanceledException can be thrown when the Timeout property of the HttpClient is lower than the time it takes to get a socket response or when the CancellationToken is cancelled.
                 // This is different from the SocketException that can be thrown when a timeout occurs at socket level.
                 stopwatch.Stop();
                 return CarboResponse.ClientTimeout(stopwatch.Elapsed);

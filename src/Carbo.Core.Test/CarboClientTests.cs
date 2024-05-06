@@ -128,5 +128,36 @@ namespace Carbo.Core.Test
             Assert.True(response.ElapsedTime > TimeSpan.Zero);
             Assert.NotNull(response.SocketError);
         }
+
+        /// <summary>
+        /// Test to send a request with a valid request and cancellation token.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task SendRequest_WithValidRequestAndCancellationToken_ReturnsResponse()
+        {
+            // Arrange
+            CarboRequest request = new()
+            {
+                HttpMethod = HttpMethod.Get,
+                Url = new Uri("https://catfact.ninja/fact"),
+                Headers =
+                [
+                    new CarboKeyValuePair { Key = "Accept", Value = "application/json" }
+                ],
+                ClientTimeout = TimeSpan.FromMinutes(1),
+            };
+
+            CancellationTokenSource cancellationTokenSource = new();
+            CancellationToken cancellationToken = cancellationTokenSource.Token;
+            cancellationTokenSource.Cancel();
+
+            // Act
+            CarboResponse response = await CarboClient.Instance.SendRequestAsync(request, cancellationToken);
+
+            // Assert
+            Assert.NotNull(response);
+            Assert.True(response.ExceededClientTimeout);
+        }
     }
 }
