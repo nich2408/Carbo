@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace Carbo.ViewModels
 {
     /// <summary>
-    /// Class that represents the viewmodel of a quick request.
+    /// Class that represents the viewmodel of a request.
     /// </summary>
-    public partial class CarboQuickRequestViewModel : ObservableObject
+    public partial class RequestViewModel : ObservableObject
     {
         /// <summary>
         /// The HTTP method to use in the request.
@@ -41,12 +41,12 @@ namespace Carbo.ViewModels
         /// <summary>
         /// The query parameters to send in the request.
         /// </summary>
-        public ObservableCollection<CarboKeyValuePairViewModel> QueryParameters { get; private set; } = new();
+        public ObservableCollection<KeyValuePairViewModel> QueryParameters { get; private set; } = new();
 
         /// <summary>
         /// The headers to send in the request.
         /// </summary>
-        public ObservableCollection<CarboKeyValuePairViewModel> Headers { get; private set; } = new();
+        public ObservableCollection<KeyValuePairViewModel> Headers { get; private set; } = new();
 
         /// <summary>
         /// Assigns data from a CarboRequest to the viewmodel.
@@ -61,13 +61,13 @@ namespace Carbo.ViewModels
             QueryParameters.Clear();
             foreach (var queryParameter in carboRequest.QueryParameters)
             {
-                QueryParameters.Add(new CarboKeyValuePairViewModel { Key = queryParameter.Key, Value = queryParameter.Value, });
+                QueryParameters.Add(new KeyValuePairViewModel { Key = queryParameter.Key, Value = queryParameter.Value, });
             }
 
             Headers.Clear();
             foreach (var header in carboRequest.Headers)
             {
-                Headers.Add(new CarboKeyValuePairViewModel { Key = header.Key, Value = header.Value, });
+                Headers.Add(new KeyValuePairViewModel { Key = header.Key, Value = header.Value, });
             }
 
             StringContent = await carboRequest.Content.ReadAsStringAsync();
@@ -75,7 +75,7 @@ namespace Carbo.ViewModels
         }
 
         /// <summary>
-        /// Return a carbo request from the viewmodel.
+        /// Returns a carbo request from the viewmodel.
         /// </summary>
         /// <returns></returns>
         private CarboRequest ToCarboRequest()

@@ -49,12 +49,19 @@ namespace Carbo.Core.Client
                 carboPairs.Add(pair);
             }
 
+            List<CarboKeyValuePair> trailingHeaders = new();
+            foreach (var header in response.TrailingHeaders)
+            {
+                var pair = new CarboKeyValuePair { Key = header.Key, Value = string.Join(",", header.Value) };
+                trailingHeaders.Add(pair);
+            }
+
             CarboResponse carboResponse = CarboResponse.Completed(
                 response.StatusCode,
                 response.ReasonPhrase,
                 response.Content,
                 carboPairs,
-                response.TrailingHeaders,
+                trailingHeaders,
                 response.Version,
                 elapsedTime);
 
