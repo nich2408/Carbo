@@ -55,23 +55,23 @@ namespace Carbo.ViewModels
         /// <returns></returns>
         public async Task FromCarboRequest(CarboRequest carboRequest)
         {
+            // Assign data from CarboRequest to the viewmodel.
             HttpMethod = new HttpMethodViewModel { Method = carboRequest.HttpMethod.Method, };
             Url = carboRequest.Url.ToString();
+            StringContent = await carboRequest.Content.ReadAsStringAsync();
+            ClientTimeoutMs = (double)carboRequest.ClientTimeout.TotalMilliseconds;
 
+            // Assign the query parameters and headers to the viewmodel.
             QueryParameters.Clear();
             foreach (var queryParameter in carboRequest.QueryParameters)
             {
                 QueryParameters.Add(new KeyValuePairViewModel { Key = queryParameter.Key, Value = queryParameter.Value, });
             }
-
             Headers.Clear();
             foreach (var header in carboRequest.Headers)
             {
                 Headers.Add(new KeyValuePairViewModel { Key = header.Key, Value = header.Value, });
             }
-
-            StringContent = await carboRequest.Content.ReadAsStringAsync();
-            ClientTimeoutMs = (double)carboRequest.ClientTimeout.TotalMilliseconds;
         }
 
         /// <summary>

@@ -14,29 +14,57 @@ namespace Carbo.ViewModels
     /// </summary>
     public partial class ResponseViewModel : ObservableObject
     {
+        /// <summary>
+        /// The status code of the response.
+        /// </summary>
         [ObservableProperty]
         private HttpStatusCodeViewModel statusCode;
 
+        /// <summary>
+        /// The reason phrase of the response.
+        /// </summary>
         [ObservableProperty]
         private string reasonPhrase;
 
+        /// <summary>
+        /// The content of the response.
+        /// Use this for non-stream content.
+        /// </summary>
         [ObservableProperty]
         private string stringContent;
 
-        
+        /// <summary>
+        /// The version of the response (for example 3.0.0).
+        /// </summary>
         [ObservableProperty]
         private string version;
 
+        /// <summary>
+        /// The elapsed time of the response in milliseconds.
+        /// </summary>
         [ObservableProperty]
         private double elapsedTimeMs;
 
+        /// <summary>
+        /// Indicates if the client timeout was exceeded.
+        /// </summary>
         [ObservableProperty]
         private bool exceededClientTimeout;
 
+        /// <summary>
+        /// The error of the response (if any).
+        /// </summary>
         [ObservableProperty]
         private RequestErrorViewModel requestError;
 
+        /// <summary>
+        /// The headers of the response.
+        /// </summary>
         public ObservableCollection<KeyValuePairViewModel> Headers { get; private set; } = new();
+
+        /// <summary>
+        /// The trailing headers of the response.
+        /// </summary>
         public ObservableCollection<KeyValuePairViewModel> TrailingHeaders { get; private set; } = new();
 
         /// <summary>
@@ -46,6 +74,7 @@ namespace Carbo.ViewModels
         /// <returns></returns>
         public async Task FromCarboResponse(CarboResponse carboResponse)
         {
+            // Assign the data from the CarboResponse to the viewmodel.
             StatusCode = new HttpStatusCodeViewModel { StatusCode = (int)carboResponse.StatusCode, };
             ReasonPhrase = carboResponse.ReasonPhrase;
             StringContent = await carboResponse.Content.ReadAsStringAsync();
@@ -53,18 +82,19 @@ namespace Carbo.ViewModels
             ElapsedTimeMs = carboResponse.ElapsedTime.TotalMilliseconds;
             ExceededClientTimeout = carboResponse.ExceededClientTimeout;
 
+            // Assign the headers and trailing headers to the viewmodel.
             Headers.Clear();
             foreach (CarboKeyValuePair header in carboResponse.Headers)
             {
                 Headers.Add(new KeyValuePairViewModel { Key = header.Key, Value = header.Value });
             }
-
             TrailingHeaders.Clear();
             foreach (CarboKeyValuePair header in carboResponse.TrailingHeaders)
             {
                 TrailingHeaders.Add(new KeyValuePairViewModel { Key = header.Key, Value = header.Value });
             }
 
+            // Assign the request error to the viewmodel.
             RequestErrorViewModel requestErrorViewModel = new();
             requestErrorViewModel.ErrorType = carboResponse.RequestError is not null ? RequestErrorType.RequestError : RequestErrorType.SocketError;
             requestErrorViewModel.ErrorCode = requestErrorViewModel.ErrorType switch
@@ -88,6 +118,7 @@ namespace Carbo.ViewModels
         /// <returns></returns>
         public CarboResponse ToCarboResponse()
         {
+            // Assign the data from the viewmodel to the CarboResponse.
             CarboResponse carboResponse = new()
             {
                 StatusCode = (HttpStatusCode)StatusCode.StatusCode,
@@ -100,11 +131,11 @@ namespace Carbo.ViewModels
                 SocketError = RequestError.ErrorType == RequestErrorType.SocketError ? (SocketError)RequestError.ErrorCode : null,
             };
 
+            // Assign the headers and trailing headers to the CarboResponse.
             foreach (KeyValuePairViewModel header in Headers)
             {
                 carboResponse.Headers.Add(new CarboKeyValuePair { Key = header.Key, Value = header.Value });
             }
-
             foreach (KeyValuePairViewModel header in TrailingHeaders)
             {
                 carboResponse.TrailingHeaders.Add(new CarboKeyValuePair { Key = header.Key, Value = header.Value });
