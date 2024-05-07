@@ -1,6 +1,4 @@
-﻿using System.Net.Http.Headers;
-
-namespace Carbo.Core.Models.Http
+﻿namespace Carbo.Core.Models.Http
 {
     /// <summary>
     /// Class that represents a request to be made by the carbo client.
