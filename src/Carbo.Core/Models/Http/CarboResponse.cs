@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Sockets;
 
 namespace Carbo.Core.Models.Http
@@ -14,7 +13,7 @@ namespace Carbo.Core.Models.Http
             string reasonPhrase,
             HttpContent content,
             List<CarboKeyValuePair> headers,
-            HttpHeaders trailingHeaders,
+            List<CarboKeyValuePair> trailingHeaders,
             Version version,
             TimeSpan elapsedTime,
             bool exceededClientTimeout,
@@ -34,6 +33,13 @@ namespace Carbo.Core.Models.Http
         }
 
         /// <summary>
+        /// Use this with property initialization.
+        /// </summary>
+        public CarboResponse()
+        {
+        }
+
+        /// <summary>
         /// Use this method when the request was completed.
         /// </summary>
         /// <param name="statusCode"></param>
@@ -44,7 +50,7 @@ namespace Carbo.Core.Models.Http
         /// <param name="version"></param>
         /// <param name="elapsedTime"></param>
         /// <returns></returns>
-        public static CarboResponse Completed(HttpStatusCode statusCode, string reasonPhrase, HttpContent content, List<CarboKeyValuePair> headers, HttpHeaders trailingHeaders, Version version, TimeSpan elapsedTime)
+        public static CarboResponse Completed(HttpStatusCode statusCode, string reasonPhrase, HttpContent content, List<CarboKeyValuePair> headers, List<CarboKeyValuePair> trailingHeaders, Version version, TimeSpan elapsedTime)
         {
             return new CarboResponse(statusCode: statusCode, reasonPhrase: reasonPhrase, content: content, headers: headers, trailingHeaders: trailingHeaders, version: version, elapsedTime: elapsedTime, exceededClientTimeout: false, socketError: null, requestError: null);
         }
@@ -82,20 +88,20 @@ namespace Carbo.Core.Models.Http
             return new CarboResponse(statusCode: null, reasonPhrase: null, content: null, headers: null, trailingHeaders: null, version: null, elapsedTime: elapsedTime, exceededClientTimeout: true, socketError: null, requestError: null);
         }
 
-        public HttpStatusCode? StatusCode { get; }
-        public string ReasonPhrase { get; }
-        public HttpContent Content { get; }
-        public List<CarboKeyValuePair> Headers { get; }
-        public HttpHeaders TrailingHeaders { get; }
-        public Version Version { get; }
-        public TimeSpan ElapsedTime { get; }
+        public HttpStatusCode? StatusCode { get; init; }
+        public string ReasonPhrase { get; init; }
+        public HttpContent Content { get; init; }
+        public List<CarboKeyValuePair> Headers { get; init; }
+        public List<CarboKeyValuePair> TrailingHeaders { get; init; }
+        public Version Version { get; init; }
+        public TimeSpan ElapsedTime { get; init; }
 
-        public bool ExceededClientTimeout { get; }
+        public bool ExceededClientTimeout { get; init; }
 
         /// <summary>
         /// See https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httprequesterror?view=net-8.0
         /// </summary>
-        public HttpRequestError? RequestError { get; }
-        public SocketError? SocketError { get; }
+        public HttpRequestError? RequestError { get; init; }
+        public SocketError? SocketError { get; init; }
     }
 }

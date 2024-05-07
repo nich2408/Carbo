@@ -6,7 +6,7 @@ namespace Carbo.ViewModels
     /// <summary>
     /// Class that represents the viewmodel of a key-value pair.
     /// </summary>
-    public partial class CarboKeyValuePairViewModel : ObservableObject
+    public partial class KeyValuePairViewModel : ObservableObject
     {
         [ObservableProperty]
         private string key;
