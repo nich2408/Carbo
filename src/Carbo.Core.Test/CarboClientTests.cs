@@ -198,5 +198,27 @@ namespace Carbo.Core.Test
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.True(length <= maxLength);
         }
+
+        /// <summary>
+        /// Test to send a valid request with route and query parameters with curly braces.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task CreateURL_WithCurlyBraces()
+        {
+            // Arrange
+            string url = "https://test.com/{section}";
+            string expectedUrl = "https://test.com/{section}?queryparam={queryparam}&anotherqueryparam={anotherqueryparam}";
+
+            // Act
+            CarboUrl testUrl = CarboUrl.Create(
+                url,
+                [],
+                [new CarboKeyValuePair { Key = "queryparam", Value = "q" }, new CarboKeyValuePair { Key = "anotherqueryparam", Value = "2" }]);
+
+            // Assert
+            Assert.NotNull(testUrl);
+            Assert.Equal(expectedUrl, testUrl.TemplatedUrl);
+        }
     }
 }
