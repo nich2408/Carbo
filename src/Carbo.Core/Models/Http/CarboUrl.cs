@@ -32,6 +32,11 @@
         /// <returns></returns>
         public static CarboUrl Create(string baseUrl, List<CarboKeyValuePair> routeParameters, List<CarboKeyValuePair> queryParameters)
         {
+            if (!Uri.IsWellFormedUriString(baseUrl, UriKind.Absolute))
+            {
+                throw new ArgumentException("The base URL is not a valid absolute URL.", nameof(baseUrl));
+            }
+
             string templatedUrl = baseUrl;
             foreach (var routeParameter in routeParameters)
             {
