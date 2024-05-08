@@ -17,10 +17,11 @@ namespace Carbo.Core.Test
         public async Task SendRequest_WithValidRequest_ReturnsResponse()
         {
             // Arrange
+            CarboUrl url = CarboUrl.Create("https://catfact.ninja/fact", [], []);
             CarboRequest request = new()
             {
                 HttpMethod = HttpMethod.Get,
-                Url = new Uri("https://catfact.ninja/fact"),
+                Url = url,
                 Headers =
                 [
                     new CarboKeyValuePair { Key = "Accept", Value = "application/json" }
@@ -44,11 +45,11 @@ namespace Carbo.Core.Test
         public async Task SendRequest_WithInvalidRequest_ReturnsResponseWithRequestError()
         {
             // Arrange
-            string randomUrl = $"https://{Guid.NewGuid():N}/{Guid.NewGuid():N}/{Guid.NewGuid():N}";
+            CarboUrl randomUrl = CarboUrl.Create($"https://{Guid.NewGuid():N}/{Guid.NewGuid():N}/{Guid.NewGuid():N}", [], []);
             CarboRequest request = new()
             {
                 HttpMethod = HttpMethod.Get,
-                Url = new Uri(randomUrl),
+                Url = randomUrl,
                 Headers =
                 [
                     new CarboKeyValuePair { Key = "Accept", Value = "application/json" }
@@ -73,11 +74,11 @@ namespace Carbo.Core.Test
         {
             // Arrange
             // See https://stackoverflow.com/a/14503574
-            string timeoutURL = $"http://www.google.com:81/";
+            CarboUrl timeoutURL = CarboUrl.Create($"http://www.google.com:81/", [], []);
             CarboRequest request = new()
             {
                 HttpMethod = HttpMethod.Get,
-                Url = new Uri(timeoutURL),
+                Url = timeoutURL,
                 Headers =
                 [
                     new CarboKeyValuePair { Key = "Accept", Value = "application/json" }
@@ -105,11 +106,11 @@ namespace Carbo.Core.Test
         {
             // Arrange
             // See https://stackoverflow.com/a/14503574
-            string timeoutURL = $"http://www.google.com:81/";
+            CarboUrl timeoutURL = CarboUrl.Create($"http://www.google.com:81/", [], []);
             CarboRequest request = new()
             {
                 HttpMethod = HttpMethod.Get,
-                Url = new Uri(timeoutURL),
+                Url = timeoutURL,
                 Headers =
                 [
                     new CarboKeyValuePair { Key = "Accept", Value = "application/json" }
@@ -137,10 +138,11 @@ namespace Carbo.Core.Test
         public async Task SendRequest_WithValidRequestAndCancellationToken_ReturnsResponse()
         {
             // Arrange
+            CarboUrl url = CarboUrl.Create("https://catfact.ninja/fact", [], []);
             CarboRequest request = new()
             {
                 HttpMethod = HttpMethod.Get,
-                Url = new Uri("https://catfact.ninja/fact"),
+                Url = url,
                 Headers =
                 [
                     new CarboKeyValuePair { Key = "Accept", Value = "application/json" }

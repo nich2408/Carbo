@@ -16,7 +16,7 @@ namespace Carbo.Core.Client
         {
             ArgumentNullException.ThrowIfNull(request);
 
-            HttpRequestMessage httpRequestMessage = new(request.HttpMethod, request.Url);
+            HttpRequestMessage httpRequestMessage = new(request.HttpMethod, request.Url.ToUri());
             if (request.Headers != null)
             {
                 foreach (var header in request.Headers)

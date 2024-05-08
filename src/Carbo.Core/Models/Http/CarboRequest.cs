@@ -6,8 +6,7 @@
     public class CarboRequest
     {
         public HttpMethod HttpMethod { get; set; }
-        public Uri Url { get; set; }
-        public List<CarboKeyValuePair> QueryParameters { get; set; }
+        public CarboUrl Url { get; set; }
         public List<CarboKeyValuePair> Headers { get; set; }
         public HttpContent Content { get; set; }
         public TimeSpan ClientTimeout { get; set; }

@@ -57,7 +57,7 @@ namespace Carbo.ViewModels
         {
             // Assign data from CarboRequest to the viewmodel.
             HttpMethod = new HttpMethodViewModel { Method = carboRequest.HttpMethod.Method, };
-            Url = carboRequest.Url.ToString();
+            Url = carboRequest.ParameterizedUrl.ToString();
             StringContent = await carboRequest.Content.ReadAsStringAsync();
             ClientTimeoutMs = (double)carboRequest.ClientTimeout.TotalMilliseconds;
 
@@ -83,7 +83,7 @@ namespace Carbo.ViewModels
             return new()
             {
                 HttpMethod = new HttpMethod(HttpMethod.Method),
-                Url = new Uri(Url),
+                ParameterizedUrl = new Uri(Url),
                 QueryParameters = QueryParameters.Select(x => new CarboKeyValuePair { Key = x.Key, Value = x.Value, }).ToList(),
                 Headers = Headers.Select(x => new CarboKeyValuePair { Key = x.Key, Value = x.Value, }).ToList(),
                 Content = new StringContent(StringContent),
