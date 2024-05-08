@@ -1,6 +1,7 @@
 ﻿using Carbo.Core.Models.Http;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
@@ -44,6 +45,11 @@ namespace Carbo.ViewModels
         public ObservableCollection<KeyValuePairViewModel> QueryParameters { get; private set; } = new();
 
         /// <summary>
+        /// The route parameters to send in the request.
+        /// </summary>
+        public ObservableCollection<KeyValuePairViewModel> RouteParameters { get; private set; } = new();
+
+        /// <summary>
         /// The headers to send in the request.
         /// </summary>
         public ObservableCollection<KeyValuePairViewModel> Headers { get; private set; } = new();
@@ -57,15 +63,20 @@ namespace Carbo.ViewModels
         {
             // Assign data from CarboRequest to the viewmodel.
             HttpMethod = new HttpMethodViewModel { Method = carboRequest.HttpMethod.Method, };
-            Url = carboRequest.ParameterizedUrl.ToString();
+            Url = carboRequest.Url.TemplatedUrl;
             StringContent = await carboRequest.Content.ReadAsStringAsync();
             ClientTimeoutMs = (double)carboRequest.ClientTimeout.TotalMilliseconds;
 
-            // Assign the query parameters and headers to the viewmodel.
+            // Assign data from CarboRequest to the viewmodel.
             QueryParameters.Clear();
-            foreach (var queryParameter in carboRequest.QueryParameters)
+            foreach (var queryParameter in carboRequest.Url.QueryParameters)
             {
                 QueryParameters.Add(new KeyValuePairViewModel { Key = queryParameter.Key, Value = queryParameter.Value, });
+            }
+            RouteParameters.Clear();
+            foreach (var routeParameter in carboRequest.Url.RouteParameters)
+            {
+                RouteParameters.Add(new KeyValuePairViewModel { Key = routeParameter.Key, Value = routeParameter.Value, });
             }
             Headers.Clear();
             foreach (var header in carboRequest.Headers)
@@ -80,11 +91,12 @@ namespace Carbo.ViewModels
         /// <returns></returns>
         private CarboRequest ToCarboRequest()
         {
+            List<CarboKeyValuePair> queryParameters = QueryParameters.Select(x => new CarboKeyValuePair { Key = x.Key, Value = x.Value, }).ToList();
+            List<CarboKeyValuePair> routeParameters = RouteParameters.Select(x => new CarboKeyValuePair { Key = x.Key, Value = x.Value, }).ToList();
             return new()
             {
                 HttpMethod = new HttpMethod(HttpMethod.Method),
-                ParameterizedUrl = new Uri(Url),
-                QueryParameters = QueryParameters.Select(x => new CarboKeyValuePair { Key = x.Key, Value = x.Value, }).ToList(),
+                Url = CarboUrl.Create(Url, routeParameters, queryParameters),
                 Headers = Headers.Select(x => new CarboKeyValuePair { Key = x.Key, Value = x.Value, }).ToList(),
                 Content = new StringContent(StringContent),
                 ClientTimeout = TimeSpan.FromMilliseconds(ClientTimeoutMs)
