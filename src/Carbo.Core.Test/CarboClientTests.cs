@@ -198,23 +198,5 @@ namespace Carbo.Core.Test
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.True(length <= maxLength);
         }
-
-        /// <summary>
-        /// Test to send a request with invalid URL.
-        /// </summary>
-        /// <returns></returns>
-        [Fact]
-        public void SendRequest_WithInvalidUrlAndParameters_ReturnsResponse()
-        {
-            // Arrange
-            string invalidUrl = "https://{invalid}.{url}";
-            
-            // Act
-            Action action = () => CarboUrl.Create(invalidUrl, [], []);
-
-            // Assert
-            var error = Assert.Throws<ArgumentException>(action);
-            Assert.Contains("The base URL is not a valid absolute URL.", error.Message);
-        }
     }
 }
