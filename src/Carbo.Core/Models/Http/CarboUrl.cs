@@ -44,13 +44,13 @@
             }
             if (queryParameters.Count > 0)
             {
-                var firstQueryParameter = queryParameters.First();
+                var firstQueryParameter = queryParameters[0];
                 string key = Uri.EscapeDataString(firstQueryParameter.Key);
                 templatedUrl += $"?{key}={{{key}}}";
                 foreach (var queryParameter in queryParameters.Skip(1))
                 {
                     key = Uri.EscapeDataString(queryParameter.Key);
-                    templatedUrl += $"?{key}={{{key}}}";
+                    templatedUrl += $"&{key}={{{key}}}";
                 }
             }
             return new CarboUrl(templatedUrl, routeParameters, queryParameters);

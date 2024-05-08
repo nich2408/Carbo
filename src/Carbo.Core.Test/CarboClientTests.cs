@@ -1,6 +1,7 @@
 ﻿using Carbo.Core.Client;
 using Carbo.Core.Models.Http;
 using System.Net;
+using System.Text.Json.Nodes;
 using Xunit;
 
 namespace Carbo.Core.Test
@@ -160,6 +161,42 @@ namespace Carbo.Core.Test
             // Assert
             Assert.NotNull(response);
             Assert.True(response.ExceededClientTimeout);
+        }
+
+        /// <summary>
+        /// Test to send a valid request with route and query parameters.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task SendRequest_WithValidRequestAndParameters_ReturnsResponse()
+        {
+            // Arrange
+            int maxLength = 20;
+            CarboUrl url = CarboUrl.Create(
+                "https://catfact.ninja/resource",
+                [new CarboKeyValuePair { Key = "resource", Value = "fact" }],
+                [new CarboKeyValuePair { Key = "max_length", Value = maxLength.ToString() }]);
+            CarboRequest request = new()
+            {
+                HttpMethod = HttpMethod.Get,
+                Url = url,
+                Headers =
+                [
+                    new CarboKeyValuePair { Key = "Accept", Value = "application/json" }
+                ],
+                ClientTimeout = TimeSpan.FromMinutes(1),
+            };
+
+            // Act
+            CarboResponse response = await CarboClient.Instance.SendRequestAsync(request);
+            string content = await response.Content.ReadAsStringAsync();
+            JsonNode? json = JsonNode.Parse(content);
+            int length = json!["length"]!.GetValue<int>();
+
+            // Assert
+            Assert.NotNull(response);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.True(length <= maxLength);
         }
     }
 }
