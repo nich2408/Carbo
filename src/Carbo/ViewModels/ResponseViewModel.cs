@@ -64,21 +64,48 @@ namespace Carbo.ViewModels
         private RequestErrorViewModel requestError;
 
         /// <summary>
+        /// The unknown error message of the response (if any).
+        /// </summary>
+        [ObservableProperty]
+        private string unknownErrorMessage;
+
+        /// <summary>
         /// The headers of the response.
         /// </summary>
-        public ObservableCollection<KeyValuePairViewModel> Headers { get; private set; } = new();
+        public ObservableCollection<KeyValuePairViewModel> Headers { get; private set; }
 
         /// <summary>
         /// The trailing headers of the response.
         /// </summary>
-        public ObservableCollection<KeyValuePairViewModel> TrailingHeaders { get; private set; } = new();
+        public ObservableCollection<KeyValuePairViewModel> TrailingHeaders { get; private set; }
+
+        /// <summary>
+        /// Creates a new instance of the viewmodel with default.
+        /// </summary>
+        /// <returns></returns>
+        public static ResponseViewModel Default()
+        {
+            return new ResponseViewModel()
+            {
+                StatusCode = null,
+                ReasonPhrase = null,
+                StringContent = null,
+                Version = null,
+                ElapsedTimeMs = 0,
+                ExceededClientTimeout = false,
+                RequestError = null,
+                Headers = [],
+                TrailingHeaders = [],
+                UnknownErrorMessage = null,
+            };
+        }
 
         /// <summary>
         /// Assigns data from a CarboResponse to the viewmodel.
         /// </summary>
         /// <param name="carboResponse"></param>
         /// <returns></returns>
-        public async Task FromCarboResponse(CarboResponse carboResponse)
+        public async Task LoadFromCarboResponseAsync(CarboResponse carboResponse)
         {
             // Assign the data from the CarboResponse to the viewmodel.
             StatusCode = new HttpStatusCodeViewModel { StatusCode = (int)carboResponse.StatusCode, };
@@ -87,6 +114,7 @@ namespace Carbo.ViewModels
             Version = carboResponse.Version.ToString();
             ElapsedTimeMs = carboResponse.ElapsedTime.TotalMilliseconds;
             ExceededClientTimeout = carboResponse.ExceededClientTimeout;
+            UnknownErrorMessage = carboResponse.Exception?.Message;
 
             // Assign the headers and trailing headers to the viewmodel.
             Headers.Clear();

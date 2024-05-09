@@ -18,7 +18,8 @@ namespace Carbo.Core.Models.Http
             TimeSpan elapsedTime,
             bool exceededClientTimeout,
             HttpRequestError? requestError,
-            SocketError? socketError)
+            SocketError? socketError,
+            Exception exception)
         {
             StatusCode = statusCode;
             ReasonPhrase = reasonPhrase;
@@ -30,6 +31,7 @@ namespace Carbo.Core.Models.Http
             ExceededClientTimeout = exceededClientTimeout;
             RequestError = requestError;
             SocketError = socketError;
+            Exception = exception;
         }
 
         /// <summary>
@@ -52,7 +54,7 @@ namespace Carbo.Core.Models.Http
         /// <returns></returns>
         public static CarboResponse Completed(HttpStatusCode statusCode, string reasonPhrase, HttpContent content, List<CarboKeyValuePair> headers, List<CarboKeyValuePair> trailingHeaders, Version version, TimeSpan elapsedTime)
         {
-            return new CarboResponse(statusCode: statusCode, reasonPhrase: reasonPhrase, content: content, headers: headers, trailingHeaders: trailingHeaders, version: version, elapsedTime: elapsedTime, exceededClientTimeout: false, socketError: null, requestError: null);
+            return new CarboResponse(statusCode: statusCode, reasonPhrase: reasonPhrase, content: content, headers: headers, trailingHeaders: trailingHeaders, version: version, elapsedTime: elapsedTime, exceededClientTimeout: false, socketError: null, requestError: null, exception: null);
         }
 
         /// <summary>
@@ -64,7 +66,7 @@ namespace Carbo.Core.Models.Http
         /// <returns></returns>
         public static CarboResponse SocketErr(TimeSpan elapsedTime, SocketError socketError, HttpRequestError requestError)
         {
-            return new CarboResponse(statusCode: null, reasonPhrase: null, content: null, headers: null, trailingHeaders: null, version: null, elapsedTime: elapsedTime, exceededClientTimeout: false, socketError: socketError, requestError: requestError);
+            return new CarboResponse(statusCode: null, reasonPhrase: null, content: null, headers: null, trailingHeaders: null, version: null, elapsedTime: elapsedTime, exceededClientTimeout: false, socketError: socketError, requestError: requestError, exception: null);
         }
 
         /// <summary>
@@ -75,7 +77,7 @@ namespace Carbo.Core.Models.Http
         /// <returns></returns>
         public static CarboResponse HttpErr(TimeSpan elapsedTime, HttpRequestError requestError)
         {
-            return new CarboResponse(statusCode: null, reasonPhrase: null, content: null, headers: null, trailingHeaders: null, version: null, elapsedTime: elapsedTime, exceededClientTimeout: false, socketError: null, requestError: requestError);
+            return new CarboResponse(statusCode: null, reasonPhrase: null, content: null, headers: null, trailingHeaders: null, version: null, elapsedTime: elapsedTime, exceededClientTimeout: false, socketError: null, requestError: requestError, exception: null);
         }
 
         /// <summary>
@@ -85,7 +87,18 @@ namespace Carbo.Core.Models.Http
         /// <returns></returns>
         public static CarboResponse ClientTimeout(TimeSpan elapsedTime)
         {
-            return new CarboResponse(statusCode: null, reasonPhrase: null, content: null, headers: null, trailingHeaders: null, version: null, elapsedTime: elapsedTime, exceededClientTimeout: true, socketError: null, requestError: null);
+            return new CarboResponse(statusCode: null, reasonPhrase: null, content: null, headers: null, trailingHeaders: null, version: null, elapsedTime: elapsedTime, exceededClientTimeout: true, socketError: null, requestError: null, exception: null);
+        }
+
+        /// <summary>
+        /// Use this method when the request was not completed because of an unknown error.
+        /// </summary>
+        /// <param name="elapsedTime"></param>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public static CarboResponse UnknownErr(TimeSpan elapsedTime, Exception exception)
+        {
+            return new CarboResponse(statusCode: null, reasonPhrase: null, content: null, headers: null, trailingHeaders: null, version: null, elapsedTime: elapsedTime, exceededClientTimeout: false, socketError: null, requestError: null, exception: exception);
         }
 
         public HttpStatusCode? StatusCode { get; init; }
@@ -103,5 +116,6 @@ namespace Carbo.Core.Models.Http
         /// </summary>
         public HttpRequestError? RequestError { get; init; }
         public SocketError? SocketError { get; init; }
+        public Exception Exception { get; init; }
     }
 }
