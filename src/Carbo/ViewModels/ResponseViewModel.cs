@@ -15,6 +15,12 @@ namespace Carbo.ViewModels
     public partial class ResponseViewModel : ObservableObject
     {
         /// <summary>
+        /// Indicates if the response viewmodel is busy.
+        /// </summary>
+        [ObservableProperty]
+        private bool isBusy;
+
+        /// <summary>
         /// The status code of the response.
         /// </summary>
         [ObservableProperty]
@@ -60,19 +66,39 @@ namespace Carbo.ViewModels
         /// <summary>
         /// The headers of the response.
         /// </summary>
-        public ObservableCollection<KeyValuePairViewModel> Headers { get; private set; } = new();
+        public ObservableCollection<KeyValuePairViewModel> Headers { get; private set; }
 
         /// <summary>
         /// The trailing headers of the response.
         /// </summary>
-        public ObservableCollection<KeyValuePairViewModel> TrailingHeaders { get; private set; } = new();
+        public ObservableCollection<KeyValuePairViewModel> TrailingHeaders { get; private set; }
+
+        /// <summary>
+        /// Creates a new instance of the viewmodel with default.
+        /// </summary>
+        /// <returns></returns>
+        public static ResponseViewModel Default()
+        {
+            return new ResponseViewModel()
+            {
+                StatusCode = null,
+                ReasonPhrase = null,
+                StringContent = null,
+                Version = null,
+                ElapsedTimeMs = 0,
+                ExceededClientTimeout = false,
+                RequestError = null,
+                Headers = [],
+                TrailingHeaders = [],
+            };
+        }
 
         /// <summary>
         /// Assigns data from a CarboResponse to the viewmodel.
         /// </summary>
         /// <param name="carboResponse"></param>
         /// <returns></returns>
-        public async Task FromCarboResponse(CarboResponse carboResponse)
+        public async Task LoadFromCarboResponseAsync(CarboResponse carboResponse)
         {
             // Assign the data from the CarboResponse to the viewmodel.
             StatusCode = new HttpStatusCodeViewModel { StatusCode = (int)carboResponse.StatusCode, };
@@ -96,19 +122,24 @@ namespace Carbo.ViewModels
 
             // Assign the request error to the viewmodel.
             RequestErrorViewModel requestErrorViewModel = new();
-            requestErrorViewModel.ErrorType = carboResponse.RequestError is not null ? RequestErrorType.RequestError : RequestErrorType.SocketError;
-            requestErrorViewModel.ErrorCode = requestErrorViewModel.ErrorType switch
+            if (carboResponse.RequestError is not null)
             {
-                RequestErrorType.RequestError => (int)carboResponse.RequestError,
-                RequestErrorType.SocketError => (int)carboResponse.SocketError,
-                _ => -1, // Unknown error type.
-            };
-            requestErrorViewModel.ErrorMessage = requestErrorViewModel.ErrorType switch
+                requestErrorViewModel.ErrorType = RequestErrorType.RequestError;
+                requestErrorViewModel.ErrorCode = (int)carboResponse.RequestError;
+                requestErrorViewModel.ErrorMessage = carboResponse.RequestError.ToString();
+            }
+            else if (carboResponse.SocketError is not null)
             {
-                RequestErrorType.RequestError => carboResponse.RequestError.ToString(),
-                RequestErrorType.SocketError => carboResponse.SocketError.ToString(),
-                _ => "Unknown error message.", // Unknown error type.
-            };
+                requestErrorViewModel.ErrorType = RequestErrorType.SocketError;
+                requestErrorViewModel.ErrorCode = (int)carboResponse.SocketError;
+                requestErrorViewModel.ErrorMessage = carboResponse.SocketError.ToString();
+            }
+            else if (carboResponse.Exception is not null)
+            {
+                requestErrorViewModel.ErrorType = RequestErrorType.Unknown;
+                requestErrorViewModel.ErrorCode = -1;
+                requestErrorViewModel.ErrorMessage = carboResponse.Exception.Message;
+            }
             RequestError = requestErrorViewModel;
         }
 

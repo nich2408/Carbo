@@ -15,6 +15,12 @@ namespace Carbo.ViewModels
     public partial class RequestViewModel : ObservableObject
     {
         /// <summary>
+        /// Indicates if the request viewmodel is busy.
+        /// </summary>
+        [ObservableProperty]
+        private bool isBusy;
+
+        /// <summary>
         /// The HTTP method to use in the request.
         /// </summary>
         [ObservableProperty]
@@ -55,11 +61,29 @@ namespace Carbo.ViewModels
         public ObservableCollection<KeyValuePairViewModel> Headers { get; private set; } = new();
 
         /// <summary>
+        /// Returns a default request viewmodel.
+        /// </summary>
+        /// <returns></returns>
+        public static RequestViewModel Default()
+        {
+            return new()
+            {
+                HttpMethod = HttpMethodViewModel.Get(),
+                Url = "https://catfact.ninja/fact",
+                StringContent = null,
+                ClientTimeoutMs = TimeSpan.FromMinutes(1).TotalMilliseconds,
+                QueryParameters = [],
+                RouteParameters = [],
+                Headers = [],
+            };
+        }
+
+        /// <summary>
         /// Assigns data from a CarboRequest to the viewmodel.
         /// </summary>
         /// <param name="carboRequest"></param>
         /// <returns></returns>
-        public async Task FromCarboRequest(CarboRequest carboRequest)
+        public async Task LoadFromCarboRequest(CarboRequest carboRequest)
         {
             // Assign data from CarboRequest to the viewmodel.
             HttpMethod = new HttpMethodViewModel { Method = carboRequest.HttpMethod.Method, };
@@ -89,7 +113,7 @@ namespace Carbo.ViewModels
         /// Returns a carbo request from the viewmodel.
         /// </summary>
         /// <returns></returns>
-        private CarboRequest ToCarboRequest()
+        public CarboRequest ToCarboRequest()
         {
             List<CarboKeyValuePair> queryParameters = QueryParameters.Select(x => new CarboKeyValuePair { Key = x.Key, Value = x.Value, }).ToList();
             List<CarboKeyValuePair> routeParameters = RouteParameters.Select(x => new CarboKeyValuePair { Key = x.Key, Value = x.Value, }).ToList();

@@ -91,6 +91,11 @@ namespace Carbo.Core.Client
                 stopwatch.Stop();
                 return CarboResponse.ClientTimeout(stopwatch.Elapsed);
             }
+            catch (Exception ex)
+            {
+                stopwatch.Stop();
+                return CarboResponse.UnknownErr(stopwatch.Elapsed, ex);
+            }
         }
     }
 }
