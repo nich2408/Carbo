@@ -204,7 +204,7 @@ namespace Carbo.Core.Test
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task CreateURL_WithCurlyBraces()
+        public void CreateURL_WithCurlyBraces()
         {
             // Arrange
             string url = "https://test.com/{section}";

@@ -15,6 +15,12 @@ namespace Carbo.ViewModels
     public partial class ResponseViewModel : ObservableObject
     {
         /// <summary>
+        /// Indicates if the response viewmodel is busy.
+        /// </summary>
+        [ObservableProperty]
+        private bool isBusy;
+
+        /// <summary>
         /// The status code of the response.
         /// </summary>
         [ObservableProperty]

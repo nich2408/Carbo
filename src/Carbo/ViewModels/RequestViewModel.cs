@@ -15,6 +15,12 @@ namespace Carbo.ViewModels
     public partial class RequestViewModel : ObservableObject
     {
         /// <summary>
+        /// Indicates if the request viewmodel is busy.
+        /// </summary>
+        [ObservableProperty]
+        private bool isBusy;
+
+        /// <summary>
         /// The HTTP method to use in the request.
         /// </summary>
         [ObservableProperty]
@@ -53,6 +59,24 @@ namespace Carbo.ViewModels
         /// The headers to send in the request.
         /// </summary>
         public ObservableCollection<KeyValuePairViewModel> Headers { get; private set; } = new();
+
+        /// <summary>
+        /// Returns a default request viewmodel.
+        /// </summary>
+        /// <returns></returns>
+        public static RequestViewModel Default()
+        {
+            return new()
+            {
+                HttpMethod = HttpMethodViewModel.Get(),
+                Url = "https://catfact.ninja/fact",
+                StringContent = string.Empty,
+                ClientTimeoutMs = TimeSpan.FromMinutes(1).TotalMilliseconds,
+                QueryParameters = [],
+                RouteParameters = [],
+                Headers = [],
+            };
+        }
 
         /// <summary>
         /// Assigns data from a CarboRequest to the viewmodel.
