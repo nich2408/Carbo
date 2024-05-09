@@ -28,6 +28,12 @@ namespace Carbo.ViewModels
         private bool CanCancelRequest => RequestViewModel.IsBusy && ResponseViewModel.IsBusy;
 
         /// <summary>
+        /// If true an error occurred.
+        /// </summary>
+        [ObservableProperty]
+        private bool errorOccurred;
+
+        /// <summary>
         /// The viewmodel of the request.
         /// </summary>
         [ObservableProperty]
@@ -73,6 +79,15 @@ namespace Carbo.ViewModels
             ctsSendRequest?.Cancel();
             RequestViewModel.IsBusy = false;
             ResponseViewModel.IsBusy = false;
+        }
+
+        /// <summary>
+        /// Command for dismissing an error.
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(ErrorOccurred))]
+        private void DismissError()
+        {
+            ErrorOccurred = false;
         }
     }
 }
