@@ -64,12 +64,6 @@ namespace Carbo.ViewModels
         private RequestErrorViewModel requestError;
 
         /// <summary>
-        /// The unknown error message of the response (if any).
-        /// </summary>
-        [ObservableProperty]
-        private string unknownErrorMessage;
-
-        /// <summary>
         /// The headers of the response.
         /// </summary>
         public ObservableCollection<KeyValuePairViewModel> Headers { get; private set; }
@@ -96,7 +90,6 @@ namespace Carbo.ViewModels
                 RequestError = null,
                 Headers = [],
                 TrailingHeaders = [],
-                UnknownErrorMessage = null,
             };
         }
 
@@ -114,7 +107,6 @@ namespace Carbo.ViewModels
             Version = carboResponse.Version.ToString();
             ElapsedTimeMs = carboResponse.ElapsedTime.TotalMilliseconds;
             ExceededClientTimeout = carboResponse.ExceededClientTimeout;
-            UnknownErrorMessage = carboResponse.Exception?.Message;
 
             // Assign the headers and trailing headers to the viewmodel.
             Headers.Clear();
@@ -130,19 +122,24 @@ namespace Carbo.ViewModels
 
             // Assign the request error to the viewmodel.
             RequestErrorViewModel requestErrorViewModel = new();
-            requestErrorViewModel.ErrorType = carboResponse.RequestError is not null ? RequestErrorType.RequestError : RequestErrorType.SocketError;
-            requestErrorViewModel.ErrorCode = requestErrorViewModel.ErrorType switch
+            if (carboResponse.RequestError is not null)
             {
-                RequestErrorType.RequestError => (int)carboResponse.RequestError,
-                RequestErrorType.SocketError => (int)carboResponse.SocketError,
-                _ => -1, // Unknown error type.
-            };
-            requestErrorViewModel.ErrorMessage = requestErrorViewModel.ErrorType switch
+                requestErrorViewModel.ErrorType = RequestErrorType.RequestError;
+                requestErrorViewModel.ErrorCode = (int)carboResponse.RequestError;
+                requestErrorViewModel.ErrorMessage = carboResponse.RequestError.ToString();
+            }
+            else if (carboResponse.SocketError is not null)
             {
-                RequestErrorType.RequestError => carboResponse.RequestError.ToString(),
-                RequestErrorType.SocketError => carboResponse.SocketError.ToString(),
-                _ => "Unknown error message.", // Unknown error type.
-            };
+                requestErrorViewModel.ErrorType = RequestErrorType.SocketError;
+                requestErrorViewModel.ErrorCode = (int)carboResponse.SocketError;
+                requestErrorViewModel.ErrorMessage = carboResponse.SocketError.ToString();
+            }
+            else if (carboResponse.Exception is not null)
+            {
+                requestErrorViewModel.ErrorType = RequestErrorType.Unknown;
+                requestErrorViewModel.ErrorCode = -1;
+                requestErrorViewModel.ErrorMessage = carboResponse.Exception.Message;
+            }
             RequestError = requestErrorViewModel;
         }
 
