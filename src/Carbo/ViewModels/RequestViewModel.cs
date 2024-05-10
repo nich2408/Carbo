@@ -34,10 +34,10 @@ namespace Carbo.ViewModels
 
         /// <summary>
         /// The content to send in the request.
-        /// Use this for non-stream content.
+        /// Use this for raw content.
         /// </summary>
         [ObservableProperty]
-        private string stringContent;
+        private string rawContent;
 
         /// <summary>
         /// The client timeout for the request in milliseconds.
@@ -70,7 +70,7 @@ namespace Carbo.ViewModels
             {
                 HttpMethod = HttpMethodViewModel.Get(),
                 Url = "https://catfact.ninja/fact",
-                StringContent = null,
+                RawContent = null,
                 ClientTimeoutMs = TimeSpan.FromMinutes(1).TotalMilliseconds,
                 QueryParameters = [],
                 RouteParameters = [],
@@ -88,7 +88,7 @@ namespace Carbo.ViewModels
             // Assign data from CarboRequest to the viewmodel.
             HttpMethod = new HttpMethodViewModel { Method = carboRequest.HttpMethod.Method, };
             Url = carboRequest.Url.TemplatedUrl;
-            StringContent = await carboRequest.Content.ReadAsStringAsync();
+            RawContent = await carboRequest.Content.ReadAsStringAsync();
             ClientTimeoutMs = (double)carboRequest.ClientTimeout.TotalMilliseconds;
 
             // Assign data from CarboRequest to the viewmodel.
@@ -122,7 +122,7 @@ namespace Carbo.ViewModels
                 HttpMethod = new HttpMethod(HttpMethod.Method),
                 Url = CarboUrl.Create(Url, routeParameters, queryParameters),
                 Headers = Headers.Select(x => new CarboKeyValuePair { Key = x.Key, Value = x.Value, }).ToList(),
-                Content = new StringContent(StringContent),
+                Content = new StringContent(RawContent),
                 ClientTimeout = TimeSpan.FromMilliseconds(ClientTimeoutMs)
             };
         }

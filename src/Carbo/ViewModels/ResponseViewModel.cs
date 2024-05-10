@@ -34,10 +34,10 @@ namespace Carbo.ViewModels
 
         /// <summary>
         /// The content of the response.
-        /// Use this for non-stream content.
+        /// Use this for raw content.
         /// </summary>
         [ObservableProperty]
-        private string stringContent;
+        private string rawContent;
 
         /// <summary>
         /// The version of the response (for example 3.0.0).
@@ -83,7 +83,7 @@ namespace Carbo.ViewModels
             {
                 StatusCode = null,
                 ReasonPhrase = null,
-                StringContent = null,
+                RawContent = null,
                 Version = null,
                 ElapsedTimeMs = 0,
                 ExceededClientTimeout = false,
@@ -103,7 +103,7 @@ namespace Carbo.ViewModels
             // Assign the data from the CarboResponse to the viewmodel.
             StatusCode = new HttpStatusCodeViewModel { StatusCode = (int)carboResponse.StatusCode, };
             ReasonPhrase = carboResponse.ReasonPhrase;
-            StringContent = await carboResponse.Content.ReadAsStringAsync();
+            RawContent = await carboResponse.Content.ReadAsStringAsync();
             Version = carboResponse.Version.ToString();
             ElapsedTimeMs = carboResponse.ElapsedTime.TotalMilliseconds;
             ExceededClientTimeout = carboResponse.ExceededClientTimeout;
@@ -154,7 +154,7 @@ namespace Carbo.ViewModels
             {
                 StatusCode = (HttpStatusCode)StatusCode.StatusCode,
                 ReasonPhrase = ReasonPhrase,
-                Content = new StringContent(StringContent),
+                Content = new StringContent(RawContent),
                 Version = new Version(Version),
                 ElapsedTime = TimeSpan.FromMilliseconds(ElapsedTimeMs),
                 ExceededClientTimeout = ExceededClientTimeout,
