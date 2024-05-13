@@ -12,6 +12,7 @@
 
   
   <ItemGroup>
+    <AvaloniaXaml Remove="Assets\CarboButtonsStyles.axaml" />
     <AvaloniaXaml Remove="Assets\CarboColorsResourceDictionary.axaml" />
   </ItemGroup>
 
@@ -30,6 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Update="Assets\CarboButtonsStyles.axaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
     <AvaloniaResource Update="Assets\CarboColorsResourceDictionary.axaml">
       <SubType>Designer</SubType>
     </AvaloniaResource>

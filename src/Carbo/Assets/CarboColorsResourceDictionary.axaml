@@ -7,6 +7,9 @@
 		</Border>
 	</Design.PreviewWith>
 	<SolidColorBrush x:Key="TerraColor">#182225</SolidColorBrush>
+	<SolidColorBrush x:Key="TerraColorLight">#233136</SolidColorBrush>
+	<SolidColorBrush x:Key="TerraColorDark">#121a1c</SolidColorBrush>
 	<SolidColorBrush x:Key="ClearColor">#edf2f2</SolidColorBrush>
 	<SolidColorBrush x:Key="SolColor">#fdc672</SolidColorBrush>
+	<SolidColorBrush x:Key="SolColorDark">#dba95e</SolidColorBrush>
 </ResourceDictionary>

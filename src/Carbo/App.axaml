@@ -6,5 +6,6 @@
 
     <Application.Styles>
         <FluentTheme />
+		<StyleInclude Source="/Assets/CarboButtonsStyles.axaml"/>
     </Application.Styles>
 </Application>

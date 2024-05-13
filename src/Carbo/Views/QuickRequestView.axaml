@@ -17,7 +17,25 @@
 		</ResourceDictionary>
 	</UserControl.Resources>
 
-	<carbocontrols:UrlTextBox DataContext="{Binding UrlTextBoxViewModel}">
-	</carbocontrols:UrlTextBox>
+	
+
+	<Grid RowDefinitions="auto,*" ColumnDefinitions="*">
+		<!-- URL top bar -->
+		<Grid Grid.Row="0" Grid.Column="0" RowDefinitions="*" ColumnDefinitions="auto, *, auto">
+			<carbocontrols:UrlTextBox
+				Grid.Row="0"
+				Grid.Column="1"
+				DataContext="{Binding UrlTextBoxViewModel}">
+			</carbocontrols:UrlTextBox>
+			<Button
+				Grid.Row="0"
+				Grid.Column="2"
+				Margin="3, 0, 0, 0"
+				Classes="carbo-primary"
+				Content="Send"
+				FontSize="20">
+			</Button>
+		</Grid>
+	</Grid>
 	
 </UserControl>

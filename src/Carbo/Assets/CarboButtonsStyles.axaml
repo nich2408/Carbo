@@ -1,0 +1,38 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Design.PreviewWith>
+    <Border Padding="20">
+      <!-- Add Controls for Previewer Here -->
+		<Button Classes="carbo-primary">Send</Button>
+    </Border>
+  </Design.PreviewWith>
+
+	<Styles.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceInclude Source="/Assets/CarboColorsResourceDictionary.axaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Styles.Resources>
+	
+  <!-- Add Styles Here -->
+	
+	<!--Primary button styling-->
+	<Style Selector="Button.carbo-primary">
+		<Setter Property="Background" Value="{StaticResource SolColor}" />
+		<Setter Property="Foreground" Value="{StaticResource TerraColor}" />
+		<Setter Property="FontWeight" Value="SemiBold" />
+		<Setter Property="BorderBrush" Value="{StaticResource SolColor}" />
+		<Setter Property="BorderThickness" Value="2" />
+		<Setter Property="CornerRadius" Value="5" />
+	</Style>
+	<Style Selector="Button.carbo-primary:pointerover /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource SolColor}" />
+		<Setter Property="Foreground" Value="{StaticResource TerraColorLight}" />
+	</Style>
+	<Style Selector="Button.carbo-primary:pressed /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource SolColorDark}" />
+		<Setter Property="Foreground" Value="{StaticResource TerraColorLight}" />
+	</Style>
+	
+</Styles>
