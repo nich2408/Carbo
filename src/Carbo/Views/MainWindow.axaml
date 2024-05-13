@@ -8,5 +8,5 @@
         x:Class="Carbo.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="Carbo">
-        <views:MainView />
+        <views:QuickRequestView />
 </Window>

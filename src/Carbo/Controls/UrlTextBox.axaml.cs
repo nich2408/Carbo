@@ -2,11 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace Carbo.Views;
+namespace Carbo.Controls;
 
-public partial class QuickRequestView : UserControl
+public partial class UrlTextBox : UserControl
 {
-    public QuickRequestView()
+    public UrlTextBox()
     {
         InitializeComponent();
     }

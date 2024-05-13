@@ -6,5 +6,7 @@
 			<TextBlock Text="Hello World!" Foreground="White" Background="{StaticResource TerraBg}"></TextBlock>
 		</Border>
 	</Design.PreviewWith>
-	<SolidColorBrush x:Key="TerraBg">#182225</SolidColorBrush>
+	<SolidColorBrush x:Key="TerraColor">#182225</SolidColorBrush>
+	<SolidColorBrush x:Key="ClearColor">#edf2f2</SolidColorBrush>
+	<SolidColorBrush x:Key="SolColor">#fdc672</SolidColorBrush>
 </ResourceDictionary>
