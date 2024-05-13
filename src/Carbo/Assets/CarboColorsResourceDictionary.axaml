@@ -1,0 +1,10 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- Add Resources Here -->
+	<Design.PreviewWith>
+		<Border Padding="20">
+			<TextBlock Text="Hello World!" Foreground="White" Background="{StaticResource TerraBg}"></TextBlock>
+		</Border>
+	</Design.PreviewWith>
+	<SolidColorBrush x:Key="TerraBg">#182225</SolidColorBrush>
+</ResourceDictionary>
