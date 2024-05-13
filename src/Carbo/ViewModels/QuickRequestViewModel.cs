@@ -39,10 +39,17 @@ namespace Carbo.ViewModels
         [ObservableProperty]
         private ResponseViewModel responseViewModel;
 
+        /// <summary>
+        /// The viewmodel of the URL text box.
+        /// </summary>
+        [ObservableProperty]
+        private UrlTextBoxViewModel urlTextBoxViewModel;
+
         public QuickRequestViewModel()
         {
-            requestViewModel = RequestViewModel.Default();
-            responseViewModel = ResponseViewModel.Default();
+            RequestViewModel = RequestViewModel.Default();
+            ResponseViewModel = ResponseViewModel.Default();
+            UrlTextBoxViewModel = UrlTextBoxViewModel.Default();
         }
 
         /// <summary>
