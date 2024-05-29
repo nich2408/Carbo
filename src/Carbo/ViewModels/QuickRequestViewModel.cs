@@ -45,11 +45,18 @@ namespace Carbo.ViewModels
         [ObservableProperty]
         private UrlTextBoxViewModel urlTextBoxViewModel;
 
+        /// <summary>
+        /// The viewmodel of the HTTP method selector.
+        /// </summary>
+        [ObservableProperty]
+        private HttpMethodSelectorViewModel httpMethodSelectorViewModel;
+
         public QuickRequestViewModel()
         {
             RequestViewModel = RequestViewModel.Default();
             ResponseViewModel = ResponseViewModel.Default();
             UrlTextBoxViewModel = UrlTextBoxViewModel.Default();
+            HttpMethodSelectorViewModel = HttpMethodSelectorViewModel.Default();
         }
 
         /// <summary>
