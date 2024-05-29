@@ -15,7 +15,6 @@
 	<ComboBox
 		ItemsSource="{Binding HttpMethods, Mode=OneWay}"
 		SelectedItem="{Binding SelectedHttpMethod, Mode=TwoWay}"
-		SelectedIndex="0"
 		Width="145"
 		BorderThickness="1"
 		BorderBrush="{Binding SelectedHttpMethod, Mode=OneWay, Converter={StaticResource myHttpMethodToColorConverter}, FallbackValue=Black}">
