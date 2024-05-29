@@ -4,10 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 xmlns:viewmodels="clr-namespace:Carbo.ViewModels"
+			 xmlns:converters="clr-namespace:Carbo.Converters"
              x:Class="Carbo.Controls.HttpMethodSelector"
 			 x:DataType="viewmodels:HttpMethodSelectorViewModel">
 
-	<ComboBox ItemsSource="{Binding HttpMethods, Mode=OneWay}" SelectedItem="{Binding SelectedHttpMethod, Mode=TwoWay}" SelectedIndex="0" Width="145">
+	<UserControl.Resources>
+		<converters:HttpMethodToColorConverter x:Key="myHttpMethodToColorConverter" />
+	</UserControl.Resources>
+	
+	<ComboBox
+		ItemsSource="{Binding HttpMethods, Mode=OneWay}"
+		SelectedItem="{Binding SelectedHttpMethod, Mode=TwoWay}"
+		SelectedIndex="0"
+		Width="145"
+		BorderThickness="1"
+		BorderBrush="{Binding SelectedHttpMethod, Mode=OneWay, Converter={StaticResource myHttpMethodToColorConverter}, FallbackValue=Black}">
 		<ComboBox.ItemTemplate>
 			<DataTemplate>
 				<TextBlock Text="{Binding Method, Mode=OneWay}" FontSize="20" HorizontalAlignment="Center" />
